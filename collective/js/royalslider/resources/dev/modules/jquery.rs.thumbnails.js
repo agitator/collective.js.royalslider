@@ -5,7 +5,7 @@
 	/**
 	 *
 	 * RoyalSlider thumbnails module
-	 * @version 1.0.6:
+	 * @version 1.0.7:
 	 *
 	 * 1.0.1
 	 * - Fixed bug with vertical thumbs caused by latest update
@@ -25,6 +25,9 @@
 	 *
 	 * 1.0.6
 	 * - Fix issue when autoHeight is enabled
+	 *
+	 * 1.0.7
+	 * - Spacing was used, instead of firstMargin to determine size of thumbnails wrap
 	 *
 	 */ 
 	$.extend($.rsProto, {
@@ -97,20 +100,27 @@
 
 				self.ev.on('rsOnAppendSlide', function(e, parsedSlide, index) {
 					var html = '<div'+self._thumbsMargin+' class="rsNavItem rsThumb">'+self._addThumbHTML+parsedSlide.thumbnail+'</div>';
+					if(self._useCSS3Transitions) {
+						self._thumbsContainer.css(self._vendorPref + 'transition-duration', '0ms');
+					}
+
 					if(index >= self.numSlides) {
 						self._thumbsContainer.append(html);
 					} else {
 						self._controlNavItems.eq(index).before(html);
 					}
 					self._controlNavItems = self._thumbsContainer.children();
-					self.updateThumbsSize();
+					self.updateThumbsSize(true);
 				});
 				self.ev.on('rsOnRemoveSlide', function(e, index) {
 					var itemToRemove = self._controlNavItems.eq(index);
 					if(itemToRemove) {
+						if(self._useCSS3Transitions) {
+							self._thumbsContainer.css(self._vendorPref + 'transition-duration', '0ms');
+						}
 						itemToRemove.remove();
 						self._controlNavItems = self._thumbsContainer.children();
-						self.updateThumbsSize();
+						self.updateThumbsSize(true);
 					}
 				});	
 				
@@ -180,13 +190,13 @@
 				self._thumbsArrowLeft.click(function() {
 					var viewportSize = Math.floor(self._thumbsViewportSize / self._thumbSize),
 						thumbId = Math.floor(self._thumbsPosition / self._thumbSize),
-						newPos = (thumbId + self._visibleThumbsPerView) * self._thumbSize + self._thumbsSpacing;
+						newPos = (thumbId + self._visibleThumbsPerView) * self._thumbSize + self.st.thumbs.firstMargin;
 					self._animateThumbsTo( newPos > self._thumbsMinPosition ? self._thumbsMinPosition : newPos );
 				});
 				self._thumbsArrowRight.click(function() {
 					var viewportSize = Math.floor(self._thumbsViewportSize / self._thumbSize),
 						thumbId = Math.floor(self._thumbsPosition / self._thumbSize),
-						newPos = (thumbId - self._visibleThumbsPerView) * self._thumbSize + self._thumbsSpacing;
+						newPos = (thumbId - self._visibleThumbsPerView) * self._thumbSize + self.st.thumbs.firstMargin;
 					self._animateThumbsTo( newPos < self._thumbsMaxPosition ? self._thumbsMaxPosition : newPos );
 				});
 				if(thumbSt.arrowsAutoHide && !self.hasTouch) {
@@ -302,23 +312,10 @@
 				}
 			}
 
-			
-
-			
-
-			
-
 			self._thumbsContainer.css(cssObj);
 			if(isResize && newHeight) {
-				self._setCurrentThumb(self.currSlideId);
+				self._setCurrentThumb(self.currSlideId, true);
 			}
-
-			if(self._useCSS3Transitions) {
-				cssObj[(self._vendorPref + 'transition-duration')] = '0ms';
-			}
-
-
-			
 		},
 		setThumbsOrientation: function(newPlacement, dontUpdateSize) {
 			var self = this;

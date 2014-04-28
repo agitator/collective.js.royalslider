@@ -5,7 +5,7 @@
 	/**
 	 *
 	 * RoyalSlider fullscreen module
-	 * @version 1.0.5:
+	 * @version 1.0.6:
 	 *
 	 * 1.0.1:
 	 * - Added rsEnterFullscreen and rsExitFullscreen events
@@ -21,6 +21,9 @@
 	 *
 	 * 1.0.5
 	 * - Fix "false" native fullscreen on Android
+	 *
+	 * * 1.0.6
+	 * - Added support for native fullscreen on latest mobile Chrome
 	 * 
 	 */
 	$.extend($.rsProto, {
@@ -48,39 +51,39 @@
 
 			if(self.st.fullscreen.nativeFS) {
 				// Thanks to John Dyer http://j.hn/
-				self._fullScreenApi = {
-					supportsFullScreen: false,
-					isFullScreen: function() { return false; },
-					requestFullScreen: function() {},
-					cancelFullScreen: function() {},
-					fullScreenEventName: '',
-					prefix: ''
-				};
+				var fullScreenApi = { 
+						supportsFullScreen: false,
+						isFullScreen: function() { return false; }, 
+						requestFullScreen: function() {}, 
+						cancelFullScreen: function() {},
+						fullScreenEventName: '',
+						prefix: ''
+					},
+					browserPrefixes = 'webkit moz o ms khtml'.split(' ');
 
-				var browserPrefixes = 'webkit moz o ms khtml'.split(' ');
 				// check for native support
-				if(!self.isAndroid) {
-					if (typeof document.cancelFullScreen != 'undefined') {
-						self._fullScreenApi.supportsFullScreen = true;
-					} else {
-						// check for fullscreen support by vendor prefix
-						for (var i = 0; i < browserPrefixes.length; i++ ) {
-							self._fullScreenApi.prefix = browserPrefixes[i];
-							if (typeof document[ self._fullScreenApi.prefix + 'CancelFullScreen' ] != 'undefined' ) {
-								self._fullScreenApi.supportsFullScreen = true;
-								break;
-							}
+				if (typeof document.cancelFullScreen != 'undefined') {
+					fullScreenApi.supportsFullScreen = true;
+				} else {	 
+					// check for fullscreen support by vendor prefix
+					for (var i = 0, il = browserPrefixes.length; i < il; i++ ) {
+						fullScreenApi.prefix = browserPrefixes[i];
+						
+						if (typeof document[fullScreenApi.prefix + 'CancelFullScreen' ] != 'undefined' ) {
+							fullScreenApi.supportsFullScreen = true;
+							
+							break;
 						}
 					}
 				}
-			 
-				// update methods to do something useful
-				if ( self._fullScreenApi.supportsFullScreen) {
-					self.nativeFS = true;
-					self._fullScreenApi.fullScreenEventName =  self._fullScreenApi.prefix + 'fullscreenchange' + self.ns;
 
-					self._fullScreenApi.isFullScreen = function() {
-						switch (this.prefix) {
+				// update methods to do something useful
+				if (fullScreenApi.supportsFullScreen) {
+					self.nativeFS = true;
+					fullScreenApi.fullScreenEventName = fullScreenApi.prefix + 'fullscreenchange' + self.ns;
+					
+					fullScreenApi.isFullScreen = function() {
+						switch (this.prefix) {	
 							case '':
 								return document.fullScreen;
 							case 'webkit':
@@ -88,16 +91,18 @@
 							default:
 								return document[this.prefix + 'FullScreen'];
 						}
-					};
-					self._fullScreenApi.requestFullScreen = function(el) {
+					}
+					fullScreenApi.requestFullScreen = function(el) {
 						return (this.prefix === '') ? el.requestFullScreen() : el[this.prefix + 'RequestFullScreen']();
-					};
-					self._fullScreenApi.cancelFullScreen = function(el) {
+					}
+					fullScreenApi.cancelFullScreen = function(el) {
 						return (this.prefix === '') ? document.cancelFullScreen() : document[this.prefix + 'CancelFullScreen']();
-					};
+					}		
+					self._fullScreenApi = fullScreenApi;
 				} else {
 					self._fullScreenApi = false;
 				}
+
 			}
 
 

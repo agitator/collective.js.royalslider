@@ -1,9 +1,9 @@
 /*
  * RoyalSlider
  *
- * @version 9.5.1:
+ * @version 9.5.4:
  *
- * Copyright 2011-2013, Dmitry Semenov
+ * Copyright, Dmitry Semenov
  *
  */
 (function($) {
@@ -1455,6 +1455,10 @@
 				newWidth,
 				newHeight;
 
+			if(!self.slider) {
+				return;
+			}
+
 			if(self.st.autoScaleSlider) {
 				var asw = self.st.autoScaleSliderWidth,
 					ash = self.st.autoScaleSliderHeight;
@@ -1553,7 +1557,7 @@
 			self.slides.splice(index, 0, parsedSlide);
 			self.slidesJQ.splice(index, 0, $('<div style="'+ (self._isMove ? 'position:absolute;' : self._opacityCSS ) +'" class="rsSlide"></div>') );
 
-			if(index < self.currSlideId) {
+			if(index <= self.currSlideId) {
 				self.currSlideId++;
 			}
 			self.ev.trigger('rsOnAppendSlide', [parsedSlide, index]);
@@ -1622,7 +1626,7 @@
 
 			self._refreshNumPreloadImages();
 
-			if(self._isMove && self._loop) {
+			if(self._isMove/* && self._loop*/) {
 				self._slidesContainer.css((self._vendorPref + self._TD), '0ms');
 			}
 			if(self._refreshSlidesTimeout) {
