@@ -24,13 +24,13 @@
     directory="resources/skins"
     />
  -->
-  <genericsetup:upgradeStep
+  <!--genericsetup:upgradeStep
       source="*"
       destination="1000"
       title="Cook resources"
       description=""
       profile="collective.js.royalslider:default"
       handler=".upgrades.cookResources"
-      />
+      /-->
 
 </configure>

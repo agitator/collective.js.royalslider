@@ -1,7 +1,18 @@
 <?xml version="1.0"?>
 <object name="portal_css" meta_type="Stylesheets Registry">
- 
+
   <stylesheet
+    cacheable="True"
+    compression="safe"
+    cookable="True"
+    enabled="on"
+    expression=""
+    id="++resource++collective.js.royalslider/royalslider.css"
+    media=""
+    rel="stylesheet"
+    rendering="import"/>
+
+<!--   <stylesheet
     cacheable="True"
     compression="safe"
     cookable="True"
@@ -11,5 +22,5 @@
     media=""
     rel="stylesheet"
     rendering="import"/>
- 
+ -->
 </object>
