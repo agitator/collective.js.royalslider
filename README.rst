@@ -21,6 +21,10 @@ http://dimsemenov.com/plugins/royal-slider/pricing
 How to install
 ==============
 
+By default the minified version with all modules including the default theme be installed.
+Maybe this is NOT what you want for your project.
+All resources will be in available from ++resource++collective.js.royalslider/
+
 This addon can be installed as any other Plone addon. Please follow official
 documentation_.
 

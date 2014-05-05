@@ -12,7 +12,7 @@
     rel="stylesheet"
     rendering="import"/>
 
-<!--   <stylesheet
+  <stylesheet
     cacheable="True"
     compression="safe"
     cookable="True"
@@ -22,5 +22,5 @@
     media=""
     rel="stylesheet"
     rendering="import"/>
- -->
+
 </object>

@@ -7,7 +7,7 @@
     cookable="True"
     enabled="True"
     expression=""
-    id="++resource++collective.js.royalslider/dev/jquery.royalslider.js"
+    id="++resource++collective.js.royalslider/jquery.royalslider.min.js"
     inline="False"
   />
   
